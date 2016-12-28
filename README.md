@@ -1,1 +1,1 @@
-380CT CW2 Reo
+380CT CW2
