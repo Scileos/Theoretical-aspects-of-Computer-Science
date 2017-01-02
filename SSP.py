@@ -37,15 +37,39 @@ class SSP():
             total     = sum(candidate)
             print( "Trying: ", candidate, ", sum:", total )
 
-      def try_exhaustive(self):
-          candidate = 
+
+    def bruteforce(self):
+        numbers = self.S
+        target = self.t
+        size = 1
+        subsets = []
+        while size <= len(numbers):
+            for combination in combinations(numbers, size):
+                if sum(combination) == target:
+                    subsets.append(combination)
+            size += 1
+        if not subsets:
+            print (False)    
+        else:
+            print (subsets)
+            print (True)
+
+
+    def combinations(numbers, size):
+        if len(numbers) <= 0 or size <= 0:
+            yield []
+        else:
+            for index, number in enumerate(numbers):
+                for combination in combinations(numbers[index+1:], size-1):
+                    yield [number]+combination
+        
                 
 
                 
             
 
 instance = SSP()
-instance.random_yes_instance(4)
+instance.random_yes_instance(5)
 print( instance )
 
-instance.try_at_random()
+instance.bruteforce()
