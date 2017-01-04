@@ -80,20 +80,38 @@ class SSP():
         if (S[n-1] > t):
             return self.Dynamic(S, n-1, t)
         return self.Dynamic(S, n-1, t) or self.Dynamic(S, n-1, t-S[n-1])
+
+
+    def Greedy(self):
+        S = sorted(self.S, reverse=True)
+        t = self.t  
+        counter = 0
+        pick = 0
+        i = 0
+        while counter <= t:
+            pick = S[i]
+            if (counter + pick <= t):
+                counter += pick
+            else:
+                return counter
+        i+=1
+        return counter
+             
                 
 instance = SSP()
+instance.random_yes_instance(5)
+print (instance)
+print(instance.Greedy())
 
-for i in range(1, 35):
+for i in range(1, 50):
     times = []
     for j in range(0, 20):
         instance.random_yes_instance(i)
         #print( instance )
 
         start_time = time.clock()
-        if instance.Dynamic(instance.S, len(instance.S), instance.t) == True:
-            print("--- %s seconds ---" % (time.clock() - start_time))
-        else:  
-            print("--- %s seconds ---" % (time.clock() - start_time))   
+        instance.Greedy
+        print("--- %s seconds ---" % (time.clock() - start_time))   
         times.append(time.clock() - start_time)
     print ("length of array: ", i, " average time taken: ", sum(times) / len(times))
 
