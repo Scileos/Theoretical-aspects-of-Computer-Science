@@ -66,7 +66,20 @@ class SSP():
                     yield [number]+combination
         
                 
+    
 
+    def Dynamic(self, S, n, t):
+        #S = self.S
+        #t = self.t
+        #n = len(S)
+        if (t == 0):
+            return True
+        if (n == 0 and sum != 0):
+            return False
+        
+        if (S[n-1] > t):
+            return self.Dynamic(S, n-1, t)
+        return self.Dynamic(S, n-1, t) or self.Dynamic(S, n-1, t-S[n-1])
                 
 instance = SSP()
 
@@ -76,9 +89,11 @@ for i in range(1, 35):
         instance.random_yes_instance(i)
         #print( instance )
 
-        start_time = time.time()
-        instance.bruteforce()
-        #print("--- %s seconds ---" % (time.time() - start_time))
-        times.append(time.time() - start_time)
+        start_time = time.clock()
+        if instance.Dynamic(instance.S, len(instance.S), instance.t) == True:
+            print("--- %s seconds ---" % (time.clock() - start_time))
+        else:  
+            print("--- %s seconds ---" % (time.clock() - start_time))   
+        times.append(time.clock() - start_time)
     print ("length of array: ", i, " average time taken: ", sum(times) / len(times))
 
