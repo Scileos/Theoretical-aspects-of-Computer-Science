@@ -99,21 +99,19 @@ class SSP():
              
                 
 instance = SSP()
-instance.random_yes_instance(50)
+instance.random_yes_instance(5)
 print (instance)
 print(instance.Greedy())
 
-#for i in range(1, 35):
-#    times = []
- #   for j in range(0, 20):
-  #      instance.random_yes_instance(i)
-   #     #print( instance )
-#
- #       start_time = time.clock()
-  #      if instance.Dynamic(instance.S, len(instance.S), instance.t) == True:
-   #         print("--- %s seconds ---" % (time.clock() - start_time))
-    #    else:  
-     #       print("--- %s seconds ---" % (time.clock() - start_time))   
-      #  times.append(time.clock() - start_time)
-   # print ("length of array: ", i, " average time taken: ", sum(times) / len(times))
+for i in range(1, 50):
+    times = []
+    for j in range(0, 20):
+        instance.random_yes_instance(i)
+        #print( instance )
+
+        start_time = time.clock()
+        instance.Greedy
+        print("--- %s seconds ---" % (time.clock() - start_time))   
+        times.append(time.clock() - start_time)
+    print ("length of array: ", i, " average time taken: ", sum(times) / len(times))
 
