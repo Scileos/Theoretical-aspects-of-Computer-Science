@@ -1,6 +1,6 @@
 from random import randint, sample
 from itertools import chain, combinations
-from time import time
+import time
 
 class SSP():
     def __init__(self, S=[], t=0):
@@ -49,10 +49,12 @@ class SSP():
                     subsets.append(combination)
             size += 1
         if not subsets:
-            print (False)    
+            return False
+            #print (False)    
         else:
-            print (subsets)
-            print (True)
+            return True
+            #print (subsets)
+            #print (True)
 
 
     def combinations(numbers, size):
@@ -66,10 +68,17 @@ class SSP():
                 
 
                 
-            
-
 instance = SSP()
-instance.random_yes_instance(5)
-print( instance )
 
-instance.bruteforce()
+for i in range(1, 35):
+    times = []
+    for j in range(0, 20):
+        instance.random_yes_instance(i)
+        #print( instance )
+
+        start_time = time.time()
+        instance.bruteforce()
+        #print("--- %s seconds ---" % (time.time() - start_time))
+        times.append(time.time() - start_time)
+    print ("length of array: ", i, " average time taken: ", sum(times) / len(times))
+
