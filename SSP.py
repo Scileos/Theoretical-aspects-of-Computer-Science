@@ -181,38 +181,35 @@ class SSP():
                 break
             bestCandidate = 0
             if len(nonTabu) == 0:
-                return 100
-                #return best
+                return best
             for j in range(0, len(nonTabu)): 
                 if nonTabu[j] not in tabuList:
                     if bestCandidate < nonTabu[j]:
                         bestCandidate = nonTabu[j]                        
             if sum(best) + bestCandidate <= t:
-                #print ("adding: ", bestCandidate)
+                print ("adding: ", bestCandidate)
                 best.append(bestCandidate)
-                #print("Total now: ", sum(best))
+                print("Total now: ", sum(best))
                 tabuList.append(bestCandidate)
-        if sum(best) > t:
-            return (t / sum(best)) * 100
-        else:
-            return (sum(best) / t) * 100
-        #return best
+        return best
                          
-                
+
+
+
 instance = SSP()
 #instance.random_yes_instance(10)
 #print (instance)
-#instance.Tabu()
+#instance.(Method)
 
 
 #Code to print times and percentages
-for i in range(5, 25):
-    times = []
-    percentage = []
-    for j in range(0, 20):
-        instance.random_yes_instance(i)
-        percentage.append(instance.Tabu())
-    print (sum(percentage) / len(percentage))
+#for i in range(5, 25):
+#    times = []
+#    percentage = []
+#    for j in range(0, 20):
+#        instance.random_yes_instance(i)
+#        percentage.append(instance.Tabu())
+#    print (sum(percentage) / len(percentage))
 
         #start_time = time.clock()
         #print("--- %s seconds ---" % (time.clock() - start_time))   
