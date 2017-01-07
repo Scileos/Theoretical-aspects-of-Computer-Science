@@ -91,7 +91,8 @@ class SSP():
                 if i >= S[j-1]: #When the column value is greater than the element (So it can be a subset of it)
                     subset[i][j] = subset[i][j] or subset[i - S[j-1]][j-1] #Set the value as True
         return subset[t][n] #Return the last result in the array
-                
+
+
 
 
     def Greedy(self):
@@ -107,46 +108,107 @@ class SSP():
             pick = S[i]
             if (counter + pick <= t): #Check if it will ruin the feasability of the solution
                 counter += pick
-                solution.append(pick) #If not then add it to the solution subset
-            else:
-                return solution             
+                solution.append(pick) #If not then add it to the solution subset            
         return solution
 
 
     def Grasp(self):
         """An extension of Greedy that tries to improve upon the original answer by swapping out one of 
         the numbers with one in the neighbourhood of S for a given number of iterations """
-        Greedy_Candidate = sorted(self.Greedy()) #Start with an initial answer using the Greedy method
-        restOfSet = [x for x in self.S if x not in Greedy_Candidate] #Create an array which contains the neighbourhood of Greedy_Candidate in S
-        Best_candidate = sum(Greedy_Candidate) #Initial candidate solution
-        if Best_candidate == 0: 
-            return Best_candidate
-        for i in range(0, 10): #In given iterations
-            changingList = list(Greedy_Candidate)
-            Random_Num = random.choice(changingList) #choose a random number from the best candidate
-            changingList.remove(Random_Num)
-            if not restOfSet:
-                return Best_candidate
-            else:    
-                changingList.append(random.choice(restOfSet)) #And swap it with a random number from it's neighbourhood
-                if abs(self.t - sum(changingList)) < abs(self.t - Best_candidate): #If the solution is closer than the current best solution
-                    print ("Changing best solution from ", Best_candidate, " to ", sum(changingList))
-                    Best_candidate = sum(changingList) #Then change the Best solution
-        return Best_candidate
-             
+        Best_Candidate = []
+        for i in range(0, 20): #In given iterations
+            Greedy_Candidate = self.randomizedGreedy()
+            if len(Greedy_Candidate) == 0:
+                return 0
+            restOfSet = [x for x in self.S if x not in Greedy_Candidate] #Create an array which contains the neighbourhood of Greedy_Candidate in S
+            Grasp_Candidate = self.localSearch(Greedy_Candidate, restOfSet)
+            if abs(self.t - sum(Grasp_Candidate)) < abs(self.t - sum(Best_Candidate)):
+                print("Changing best candidate from ", sum(Best_Candidate), " to ", sum(Grasp_Candidate))
+                Best_Candidate = Grasp_Candidate
+        return ("Best candidate: ",sum(Best_Candidate))
+
+
+    def localSearch(self, Greedy_Candidate, restOfSet):
+        Local_Search = Greedy_Candidate
+        changingList = list(Local_Search)
+        Random_Num = random.choice(changingList) #choose a random number from the best candidate
+        changingList.remove(Random_Num)
+        if not restOfSet:
+            return Local_Search
+        else:    
+            changingList.append(random.choice(restOfSet)) #And swap it with a random number from it's neighbourhood
+            Local_Search = changingList #Then change the Best solution
+        return Local_Search
+
+
+    def randomizedGreedy(self):
+        """Constructs a randomized Greedy solution to be used in GRASP """
+        S = sorted(self.S)
+        t = self.t  
+        counter = 0
+        pick = 0
+        solution = []
+        while len(S) != 0: #While the list isn't empty'
+            pick = random.choice(S)
+            S.remove(pick)
+            if (counter + pick <= t): #Check if it will ruin the feasability of the solution
+                counter += pick
+                solution.append(pick) #If not then add it to the solution subset            
+        return solution
+
+
+    def Tabu(self):
+        """Uses the Tabu metaheuristic approach to find a solution by only allowing non-Tabu elements to be added"""
+        S = self.S
+        t = self.t
+        tabuList = []
+        initialCandidate = []
+
+        if t == 0:
+            return 0
+
+        for i in range(0, 3):
+            ran = random.choice(self.S)
+            if ran + sum(initialCandidate) <= t:
+                initialCandidate.append(ran)
+                S.remove(ran)
                 
+            
+        best = list(initialCandidate)
+        nonTabu = [x for x in S if x not in initialCandidate]
+        for i in range(0, 50):
+            if len(tabuList) == len(nonTabu):
+                break
+            bestCandidate = 0
+            if len(nonTabu) == 0:
+                return best
+            for j in range(0, len(nonTabu)): 
+                if nonTabu[j] not in tabuList:
+                    if bestCandidate < nonTabu[j]:
+                        bestCandidate = nonTabu[j]                        
+            if sum(best) + bestCandidate <= t:
+                print ("adding: ", bestCandidate)
+                best.append(bestCandidate)
+                print("Total now: ", sum(best))
+                tabuList.append(bestCandidate)
+        return best
+                         
+
+
+
 instance = SSP()
-instance.random_yes_instance(5)
+#instance.random_yes_instance(10)
+#print (instance)
 #instance.(Method)
 
 
 #Code to print times and percentages
-#for i in range(1, 20):
+#for i in range(5, 25):
 #    times = []
 #    percentage = []
 #    for j in range(0, 20):
 #        instance.random_yes_instance(i)
-#        percentage.append(instance.Greedy())
+#        percentage.append(instance.Tabu())
 #    print (sum(percentage) / len(percentage))
 
         #start_time = time.clock()
