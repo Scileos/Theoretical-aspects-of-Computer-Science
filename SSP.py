@@ -161,36 +161,38 @@ class SSP():
         """Uses the Tabu metaheuristic approach to find a solution by only allowing non-Tabu elements to be added"""
         S = self.S
         t = self.t
-        tabuList = []
+        tabuList = [] #List of already used elements
         initialCandidate = []
 
+        #t = 0 special case
         if t == 0:
             return 0
 
+        #Simple algorithm to create an initial solution
         for i in range(0, 3):
             ran = random.choice(self.S)
             if ran + sum(initialCandidate) <= t:
                 initialCandidate.append(ran)
                 S.remove(ran)
                 
-            
-        best = list(initialCandidate)
-        nonTabu = [x for x in S if x not in initialCandidate]
-        for i in range(0, 50):
-            if len(tabuList) == len(nonTabu):
+        #Tabu search    
+        best = list(initialCandidate) #Setting best option
+        nonTabu = [x for x in S if x not in initialCandidate] #Create the neighbourhood of S
+        for i in range(0, 50): #For a given amount of iterations
+            if len(tabuList) == len(nonTabu): #If all options tried then finish
                 break
-            bestCandidate = 0
-            if len(nonTabu) == 0:
+            bestCandidate = 0 #Refresh bestCandidate
+            if len(nonTabu) == 0: #If neighbourhood is 0 special case
                 return best
-            for j in range(0, len(nonTabu)): 
-                if nonTabu[j] not in tabuList:
-                    if bestCandidate < nonTabu[j]:
-                        bestCandidate = nonTabu[j]                        
-            if sum(best) + bestCandidate <= t:
+            for j in range(0, len(nonTabu)): #Check every item in the neighbourhood
+                if nonTabu[j] not in tabuList: #If not tabu
+                    if bestCandidate < nonTabu[j]: #And element is greater than current bestCandidate
+                        bestCandidate = nonTabu[j] #Set new bestCandidate                       
+            if sum(best) + bestCandidate <= t: #After bestCandidate is found, check if it will ruin feasibility of best solution
                 print ("adding: ", bestCandidate)
-                best.append(bestCandidate)
+                best.append(bestCandidate) #If ok, then create new best
                 print("Total now: ", sum(best))
-                tabuList.append(bestCandidate)
+                tabuList.append(bestCandidate) #Add used element to tabuList
         return best
                          
 
